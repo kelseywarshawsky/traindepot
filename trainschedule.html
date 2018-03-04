@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Train</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS Ref -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="data.css" />
+    <!-- Momentjs Ref -->
+    <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+    <!-- Firebase Ref -->
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+</head>
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <div class="jumbotron">
+            <h1 class="display-4 text-center">Train Schedule</h1>
+            <hr>
+        </div>
+        <div span class="border">
+            <div class="card-header">Train Schedule</div>
+            <div class="container form-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Train Name</th>
+                            <th scope="col">Destination</th>
+                            <th scope="col">Frequency (min)</th>
+                            <th scope="col">Next Arrival</th>
+                            <th scope="col">Minutes Away</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th id="nameResult-input"></th>
+                            <td id="destResult-input"></td>
+                            <td id="freqResult-input"></td>
+                            <td id="nextResult-input"></td>
+                            <td id="minResult-input"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br>
+        <form span class="border">
+            <div class="card-header">Add Train</div>
+            <div class="container form-body">
+                <div class="form-group">
+                    <label for="name-input">Train Name</label>
+                    <input type="text" class="form-control" id="name-input">
+                </div>
+                <div class="form-group">
+                    <label for="destination-input">Destination</label>
+                    <input type="text" class="form-control" id="destination-input">
+                </div>
+                <div class="form-group">
+                    <label for="time-input">First Train Time</label>
+                    <input type="text" class="form-control" id="time-input" placeholder="00:00">
+                    <small id="timeHelp" class="form-text text-muted">24 hr Military Time</small>
+                </div>
+                <div class="form-group">
+                    <label for="frequency-input">Frequency</label>
+                    <input type="number" class="form-control" id="frequency-input" placeholder="minutes">
+                </div>
+                <button class="btn btn-primary center" type="submit" id="submit">Submit</button>
+            </div>
+        </form>
+        </span>
+    </div>
+    <br>
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+    <script>
+        var config = {
+            apiKey: "AIzaSyAnTg41Dpc6V0iFrVSKOEihYBFA5LqW1CE",
+            authDomain: "trainschedule-431f2.firebaseapp.com",
+            databaseURL: "https://trainschedule-431f2.firebaseio.com",
+            projectId: "trainschedule-431f2",
+            storageBucket: "",
+            messagingSenderId: "887531661083"
+        };
+        firebase.initializeApp(config);
+        var database = firebase.database();
+
+        var name = "";
+        var destination = "";
+        var firstTime = "";
+        var frequency = 0;
+
+
+        $("#submit").on("click", function (event) {
+            event.preventDefault();
+            destination = $("#destination-input").val().trim();
+            firstTime = $("#time-input").val().trim();
+            frequency = $("#frequency-input").val().trim();
+            name = $("#name-input").val().trim();
+
+            database.ref().push({
+                name: name,
+                destination: destination,
+                frequency: frequency,
+                firstTime: firstTime,
+                dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+        });
+        database.ref().orderByChild("dateAdded").limitToLast(100).on("child_added", function (snapshot) {
+            var sv = snapshot.val();
+            console.log(sv.name);
+            console.log(sv.destination);
+            console.log(sv.frequency);
+            console.log(sv.firstTime);
+            $("#nameResult-input").prepend(sv.name + "<br>");
+            $("#destResult-input").prepend(sv.destination + "<br>");
+            $("#freqResult-input").prepend(sv.frequency + "<br>");
+
+
+        }, function (errorObject) {
+            console.log("Errors handled: " + errorObject.code);
+        });
+    </script>
+</body>
+
+</html>
