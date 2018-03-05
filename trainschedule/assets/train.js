@@ -37,8 +37,11 @@
             console.log(sv.frequency);
             console.log(sv.firstTime);
 
-            var firstTimeConverted = moment(firstTime, "HH:mm");
+            var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "days");
             console.log("TIME CONVERTED: " + firstTimeConverted);
+
+            var currentTime = moment();
+            console.log("CURRENT TIME: " + moment(currentTime).format("HH:mm"));
 
             var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
             console.log("DIFFERENCE IN TIME: " + diffTime);
@@ -55,8 +58,9 @@
             $("#nameResult-input").prepend(sv.name + "<br>");
             $("#destResult-input").prepend(sv.destination + "<br>");
             $("#freqResult-input").prepend(sv.frequency + "<br>");
-            $("#nextResult-input").prepend(nextTrain + "<br>");
             $("#minResult-input").prepend(minTilTrain + "<br>");
+            $("#nextResult-input").prepend(moment(nextTrain).format("HH:mm") + "<br>");
+            
 
 
 
