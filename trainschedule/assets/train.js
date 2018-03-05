@@ -37,7 +37,7 @@
             console.log(sv.frequency);
             console.log(sv.firstTime);
 
-            var firstTimeConverted = moment(firstTime, "HH:mm").subtract(1, "days");
+            var firstTimeConverted = moment(sv.firstTime, "HH:mm").subtract(1, "days");
             console.log("TIME CONVERTED: " + firstTimeConverted);
 
             var currentTime = moment();
